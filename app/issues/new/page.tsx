@@ -1,22 +1,27 @@
 'use client';
-import { Box, Button, Callout, Container, TextArea, TextField, ThemePanel } from '@radix-ui/themes';
+import { Box, Button, Callout,Text, Container, TextArea, TextField, ThemePanel } from '@radix-ui/themes';
 import React, { useState } from 'react';
 import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { useForm, SubmitHandler, Controller, Form } from "react-hook-form";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { InfoCircledIcon } from '@radix-ui/react-icons';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { createIssueSchema } from '@/app/validationSchemas';
+import {z} from 'zod';
 
 
 
 const NewIssuePage = () => {
     const router = useRouter();
-    type Inputs = {
-        title: string
-        description: string
-      }
+    // type Inputs = {
+    //     title: string
+    //     description: string
+    //   }
+
+    type IssueForm = z.infer<typeof createIssueSchema>
 
     const {
         register,
@@ -24,7 +29,7 @@ const NewIssuePage = () => {
         handleSubmit,
         watch,
         formState: { errors },
-      } = useForm<Inputs>()
+      } = useForm<IssueForm>({resolver:zodResolver(createIssueSchema)})
 
       const [error,setError] = useState('');
   return (
@@ -37,7 +42,7 @@ const NewIssuePage = () => {
                         <InfoCircledIcon />
                     </Callout.Icon>
                     <Callout.Text>
-                        {error}
+                        {errors.title?.message}
                     </Callout.Text>
                 </Callout.Root>
             </div>
@@ -51,12 +56,16 @@ const NewIssuePage = () => {
             }
             
             })}>
+                
             <TextField.Root {...register("title", { required: true })} placeholder="Search the docs…"></TextField.Root>
-            <Controller 
-            name = 'description'
-            control = {control}
-            render = {({field})=><SimpleMDE {...field}/>}
-            ></Controller>
+            {errors.title && <Text color="red">{errors.title.message}</Text>}
+
+            <Controller
+                    name="description"
+                    control={control}
+                    render={({ field }) => <SimpleMDE {...field}/>}
+                />
+            {errors.description && <Text color="red" as="p">{errors.description.message}</Text>}
             <Button type="submit">Add Issue</Button>
         </form>    
     </div>
