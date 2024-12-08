@@ -1,8 +1,8 @@
 import { Button, Table } from '@radix-ui/themes'
+import Link from '@/app/components/Link'
 import React from 'react'
 import prisma  from '@/prisma/client'
 import { NextResponse } from 'next/server'
-import Link from 'next/link'
 import IssueStatusBadge from '../components/IssueStatusBadge'
 import delay from 'delay' //simulate slow server
 import IssuesActions from './issuesAction'
