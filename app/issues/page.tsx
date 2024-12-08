@@ -4,13 +4,15 @@ import prisma  from '@/prisma/client'
 import { NextResponse } from 'next/server'
 import Link from 'next/link'
 import IssueStatusBadge from '../components/IssueStatusBadge'
+import delay from 'delay' //simulate slow server
+import IssuesActions from './issuesAction'
+
 const  IssuesPage = async() => {
   const issues= await prisma.issues.findMany()
+  await delay(2000);
   return (
     <>
-    <div className='mb-5'>
-      <Button><Link href="/issues/new"></Link>New Issue</Button>
-    </div>
+    <IssuesActions />
     <Table.Root variant='surface'>
       <Table.Header>
         <Table.Row>
