@@ -1,7 +1,8 @@
 'use client';
+import dynamic from 'next/dynamic';
 import { Box, Button, Callout,Text, Container, TextArea, TextField, ThemePanel } from '@radix-ui/themes';
 import React, { useState } from 'react';
-import SimpleMDE from "react-simplemde-editor";
+//import SimpleMDE from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { useForm, SubmitHandler, Controller, Form } from "react-hook-form";
 import axios from 'axios';
@@ -14,7 +15,9 @@ import {z} from 'zod';
 import ErrorMessage from '@/app/components/ErrorMessage';
 import Spinner from '@/app/components/Spinner';
 
-
+const SimpleMDE = dynamic(()=>
+    import('react-simplemde-editor'),{ssr:false}
+)
 
 const NewIssuePage = () => {
     const router = useRouter();
