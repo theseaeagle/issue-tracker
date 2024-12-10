@@ -1,14 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import {number, string} from 'zod';
+//import {number, string} from 'zod';
 import prisma from '@/prisma/client'
 import { createIssueSchema } from "@/app/validationSchemas";
-import { notFound } from "next/navigation";
 
+
+// After
+// type Params = Promise<{ slug: string }>
+ 
+// export async function generateMetadata({ params }: { params: Params }) {
+//   const { slug } = await params
+// }
+type Params = Promise<{ 
+    id: string
+ }>
 
 export async function PATCH(
     request:NextRequest,
-    {params}:{params:{id:string}}
+    {params}:{params:Params}
 ) {
+    const { id } = await params
     const body =  await request.json()
     const validation = createIssueSchema.safeParse(body);
     if(!validation.success){
@@ -16,7 +26,7 @@ export async function PATCH(
     }
 
     const issue = await prisma.issues.findUnique({
-        where:{ id:parseInt(params.id) }
+        where:{ id:parseInt(id) }
     })
 
     if(!issue) {

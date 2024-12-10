@@ -1,7 +1,7 @@
 import { Status } from '@prisma/client';
 import { Badge, Flex } from '@radix-ui/themes';
 import React from 'react'
-import { PropsWithChildren } from 'react'
+//import { PropsWithChildren } from 'react'
 
 const statusMap : Record<Status, {label:string,color:'red'|'violet'|'green'}> = {
     OPEN : {label: 'Open', color: 'red'},

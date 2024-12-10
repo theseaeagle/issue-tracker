@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {number, string} from 'zod';
+//import {number, string} from 'zod';
 import prisma from '../../../prisma/client'
 import { createIssueSchema } from "../../validationSchemas";
 
