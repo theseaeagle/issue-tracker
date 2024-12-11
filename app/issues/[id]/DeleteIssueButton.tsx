@@ -3,11 +3,14 @@ import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import React from "react";
 import prisma from "@/prisma/client";
 import { Button } from "@radix-ui/themes";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const DeleteIssueButton = ({ issueid }: { issueid: number }) => {
   //prisma.issues.delete(
   //where:{id:issueid}
   // )
+  const router = useRouter();
   return (
     <AlertDialog.Root>
       <AlertDialog.Trigger asChild>
@@ -32,7 +35,14 @@ const DeleteIssueButton = ({ issueid }: { issueid: number }) => {
               </button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
-              <button className="inline-flex h-[35px] items-center justify-center rounded bg-red4 px-[15px] font-medium leading-none text-red11 outline-none hover:bg-red5 focus:shadow-[0_0_0_2px] focus:shadow-red7">
+              <button
+                onClick={async () => {
+                  await axios.delete("/api/issues/" + issueid);
+                  router.push("/issues");
+                  router.refresh();
+                }}
+                className="inline-flex h-[35px] items-center justify-center rounded bg-red4 px-[15px] font-medium leading-none text-red11 outline-none hover:bg-red5 focus:shadow-[0_0_0_2px] focus:shadow-red7"
+              >
                 Yes, delete account
               </button>
             </AlertDialog.Action>
