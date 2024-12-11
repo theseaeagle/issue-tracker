@@ -5,12 +5,14 @@ import prisma from "@/prisma/client";
 import { Button } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Spinner } from "@/app/components";
 
 const DeleteIssueButton = ({ issueid }: { issueid: number }) => {
   //prisma.issues.delete(
   //where:{id:issueid}
   // )
   const deleteIssue = async () => {
+    SetisDeleting(true);
     try {
       //throw new Error();
       await axios.delete("/api/issues/" + issueid);
@@ -18,16 +20,22 @@ const DeleteIssueButton = ({ issueid }: { issueid: number }) => {
       router.refresh();
     } catch {
       setError(true);
+      SetisDeleting(false);
     }
+    SetisDeleting(false);
   };
+  const [isDeleting, SetisDeleting] = useState(false);
   const router = useRouter();
   const [error, setError] = useState(false);
   return (
     <>
       <AlertDialog.Root>
         <AlertDialog.Trigger asChild>
-          <button className="inline-flex h-[35px] items-center justify-center rounded bg-white px-[15px] font-medium leading-none text-violet11 shadow-[0_2px_10px] shadow-blackA4 outline-none hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black">
-            Delete account
+          <button
+            disabled={isDeleting}
+            className="inline-flex h-[35px] items-center justify-center rounded bg-white px-[15px] font-medium leading-none text-violet11 shadow-[0_2px_10px] shadow-blackA4 outline-none hover:bg-mauve3 focus:shadow-[0_0_0_2px] focus:shadow-black"
+          >
+            {isDeleting && <Spinner />}Delete Issue
           </button>
         </AlertDialog.Trigger>
         <AlertDialog.Portal>
