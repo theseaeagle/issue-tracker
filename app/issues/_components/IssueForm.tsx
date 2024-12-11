@@ -47,8 +47,9 @@ const IssueForm = ({ issue }: { issue?: Issues }) => {
       } else {
         await axios.post("/api/issues", data);
       }
-      router.refresh();
+
       router.push("/issues");
+      router.refresh();
     } catch (error) {
       setError("An unexpected error occured! " + error);
       setSubmitting(false);
