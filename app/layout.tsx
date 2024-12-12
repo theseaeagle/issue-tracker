@@ -11,6 +11,7 @@ import {
 } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Theme } from "@radix-ui/themes";
+import { auth } from "@/auth";
 
 const user = {
   name: "Tom Cook",
@@ -28,18 +29,26 @@ const navigation = [
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Sign In", href: "#" },
 ];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+  if (session?.user) {
+    userNavigation[2].name = "Sign Out";
+    userNavigation[2].href = "/api/auth/signout";
+  } else {
+    userNavigation[2].name = "Sign In";
+    userNavigation[2].href = "/api/auth/signin";
+  }
   return (
     <html lang="en">
       <body>
@@ -86,7 +95,6 @@ export default function RootLayout({
                         <span className="sr-only">View notifications</span>
                         <BellIcon aria-hidden="true" className="h-6 w-6" />
                       </button>
-
                       {/* Profile dropdown */}
                       <Menu as="div" className="relative ml-3">
                         <div>
@@ -172,6 +180,7 @@ export default function RootLayout({
                         {user.email}
                       </div>
                     </div>
+
                     <button
                       type="button"
                       className="relative ml-auto shrink-0 rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
